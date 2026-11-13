@@ -6,3 +6,5 @@ pipeline/profiler/cache/
 .arena/
 .llm_cache/
 pipeline/profiler/out/
+cache/
+.env*
