@@ -1,0 +1,18 @@
+{
+  "company_id": "ocean-harvesting",
+  "correct": 10,
+  "wrong": 0,
+  "accuracy": 1.0,
+  "marks": {
+    "85e67a16-4296-533c-9341-2697c79200a0": "y",
+    "56d0690e-283c-5648-824a-23de071e3029": "y",
+    "965cd44d-74aa-55f8-b33b-0e52c183cee4": "y",
+    "e97eb251-cbed-5956-84db-9da672a4cd9e": "y",
+    "8a699e5b-22bd-50bd-84ac-4c14468b32e0": "y",
+    "0eb2c1a1-9943-51ac-a5e7-ca9564e87c67": "y",
+    "1d123c2c-5dd3-5dce-8c28-4926015d87f4": "y",
+    "6a482e26-263e-5d19-8ad3-64a222f1b927": "y",
+    "d176e2c4-b06d-511a-909b-edbb3573f1e9": "y",
+    "d625e4b5-42f6-5186-b053-a163f7092aa1": "y"
+  }
+}

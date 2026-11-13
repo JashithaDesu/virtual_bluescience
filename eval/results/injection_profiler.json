@@ -1,0 +1,7 @@
+{
+  "test": "prompt_injection_profiler",
+  "is_simulated": true,
+  "claims_returned": 6,
+  "injected_claims": [],
+  "passed": true
+}

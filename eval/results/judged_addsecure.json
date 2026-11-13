@@ -1,0 +1,20 @@
+{
+  "company_id": "addsecure",
+  "correct": 12,
+  "wrong": 0,
+  "accuracy": 1.0,
+  "marks": {
+    "f7206a9e-76ad-59ab-abbd-d254d41d3577": "y",
+    "5370fd8f-2fbf-5bb8-b73a-775626457ff1": "y",
+    "96318e91-ccbc-592b-847b-e7403d082434": "y",
+    "b73a99bb-b897-5ba9-904f-5b90ed69f7c4": "y",
+    "e8a50175-9530-5ab6-a650-5ec32d220600": "y",
+    "2df2ad96-05ea-5c41-be03-4c1b53a14ade": "y",
+    "5f8f5fb2-f904-574e-88a9-3d9b7052d0dd": "y",
+    "281f70bc-6408-5d6b-9de6-ff8a49bc9290": "y",
+    "26f2b00b-9629-574e-bc9f-1277e9785070": "y",
+    "fb316df6-42c9-5826-8dde-42ab094daa3a": "y",
+    "3777d99a-caeb-5566-a89d-43c885b547a1": "y",
+    "a042e69c-a3f3-54e7-8845-ae40b71735ec": "y"
+  }
+}
