@@ -1,20 +1,22 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from typing import Literal, Optional
 from datetime import datetime
+from uuid import UUID
 
-Field = Literal["offering", "technology", "expertise", "application_area",
-                "market", "customer_group", "geography", "priority",
-                "collaboration", "domain", "relevant_topic"]
+ClaimField = Literal["offering", "technology", "expertise", "application_area", "market",
+                     "customer_group", "geography", "priority", "collaboration", "domain",
+                     "relevant_topic", "size", "founded", "location"]
 
 class ProfileClaim(BaseModel):
+    id: UUID
     company_id: str
-    field: Field
-    value: str
+    field: ClaimField
+    value: Optional[str] = None
     type: Literal["stated", "inferred", "missing"]
-    quote: Optional[str] = None        # required when type == "stated", < 25 words
-    source_url: Optional[HttpUrl] = None
+    quote: Optional[str] = None
+    source_url: Optional[str] = None
     retrieved_at: Optional[datetime] = None
     confidence: Literal["high", "medium", "low"] = "medium"
     origin: Literal["agent", "user"] = "agent"
-    verified: bool = False             # set by the Validator
+    verified: bool = False
     is_simulated: bool = False
