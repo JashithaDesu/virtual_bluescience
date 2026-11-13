@@ -24,6 +24,7 @@ DOMAINS = ["energy", "marine", "iot", "software", "cybersecurity", "telecom", "d
 CAP = {"size": 1, "founded": 1, "relevant_topic": 6, "domain": 4}
 DEFAULT_CAP = 3
 CHUNK, VERIFY_MIN, SAME_VALUE, WORKERS = 12000, 90, 85, 4
+SKIP_TOPICS = False
 
 SYSTEM_FACTS = f"""You extract a factual company profile from ONE web page.
 
@@ -52,6 +53,12 @@ based ONLY on its verified profile facts below.
 Return JSON: {"topics": ["...", "..."]} with 4 to 6 items.
 Each item is a specific English phrase naming a kind of funding call, testbed, event or partner
 (for example "Marine renewable energy testbeds"). No generic items like "business growth". No duplicates."""
+
+def as_list(res, key):
+    """Accept both {key: [...]} and a bare [...] from the LLM."""
+    if isinstance(res, list):
+        return res
+    return res.get(key, []) if isinstance(res, dict) else []
 
 def norm(s):
     s = unicodedata.normalize("NFKC", s or "").lower()
@@ -110,7 +117,7 @@ def profile(cid, name):
     raw_claims = []
     for doc, res in results:
         page_norm = norm(doc["text"])
-        for c in res.get("claims", []):
+        for c in as_list(res, "claims"):
             stats["raw"] += 1
             field, value, ctype = c.get("field"), (c.get("value") or "").strip(), c.get("type")
             if field not in FIELDS or field == "relevant_topic" or not value or ctype not in ("stated", "inferred"):
@@ -139,7 +146,7 @@ def profile(cid, name):
     claims = dedupe(raw_claims)
 
     facts = "\n".join(f"- {c['field']}: {c['value']}" for c in claims if c["type"] == "stated")
-    topics = chat_json(SYSTEM_TOPICS, f"Company: {name}\nVerified facts:\n{facts}").get("topics", [])
+    topics = [] if SKIP_TOPICS else chat_json(SYSTEM_TOPICS, f"Company: {name}\nVerified facts:\n{facts}").get("topics", [])
     for t in topics:
         if isinstance(t, str) and t.strip():
             claims.append(ProfileClaim(
