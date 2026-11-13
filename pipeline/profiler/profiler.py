@@ -146,7 +146,7 @@ def profile(cid, name):
     claims = dedupe(raw_claims)
 
     facts = "\n".join(f"- {c['field']}: {c['value']}" for c in claims if c["type"] == "stated")
-    topics = [] if SKIP_TOPICS else chat_json(SYSTEM_TOPICS, f"Company: {name}\nVerified facts:\n{facts}").get("topics", [])
+    topics = [] if SKIP_TOPICS else as_list(chat_json(SYSTEM_TOPICS, f"Company: {name}\nVerified facts:\n{facts}"), "topics")
     for t in topics:
         if isinstance(t, str) and t.strip():
             claims.append(ProfileClaim(
