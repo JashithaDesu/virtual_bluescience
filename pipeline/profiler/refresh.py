@@ -36,17 +36,23 @@ def refresh_pages(cid, pages):
     return changed
 
 def diff(old, new):
-    o = {c["id"]: c for c in old["claims"]} if old else {}
-    n = {c["id"]: c for c in new["claims"]}
+    """Compare by meaning: same field + near-identical value = unchanged. Topics summarised in one line."""
+    from rapidfuzz import fuzz
+    same = lambda a, b: a["field"] == b["field"] and a["type"] == b["type"] and \
+        fuzz.token_set_ratio(P.norm(a["value"] or "-"), P.norm(b["value"] or "-")) >= 85
+    old_c = [c for c in (old["claims"] if old else []) if c["field"] != "relevant_topic"]
+    new_c = [c for c in new["claims"] if c["field"] != "relevant_topic"]
+    added = [c for c in new_c if not any(same(c, o) for o in old_c)]
+    removed = [c for c in old_c if not any(same(c, n) for n in new_c)]
     fmt = lambda c: f"{c['type'].upper():<8} {c['field']}: {c['value'] or '-'}"
-    added = [fmt(n[i]) for i in n if i not in o]
-    removed = [fmt(o[i]) for i in o if i not in n]
-    for a in added:
-        print(f"   + {a}")
-    for r in removed:
-        print(f"   - {r}")
+    for c in added:
+        print(f"   + {fmt(c)}" + (f'   "{c["quote"][:60]}"' if c.get("quote") else ""))
+    for c in removed:
+        print(f"   - {fmt(c)}")
     if not added and not removed:
-        print("   (no claim changes)")
+        print("   (no fact changes)")
+    n_topics = sum(c["field"] == "relevant_topic" for c in new["claims"])
+    print(f"   ~ {n_topics} opportunity topics re-derived from the updated facts")
 
 def main():
     ap = argparse.ArgumentParser()
