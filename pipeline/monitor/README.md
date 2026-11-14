@@ -201,3 +201,20 @@ Funding remains a potential match; eligibility is not established.
 The corrected OHT baseline was published and all three feeds passed
 verification afterward. See DEMO_CHECKLIST.md for laptop startup,
 watcher operation, rehearsal and manual fallback.
+
+## LLM failure fallback
+Explanation requests make one LLM attempt. On a request/helper exception,
+reranking uses deterministic reasons citing accepted claims from the
+current company. Inferred interests remain labelled; funding eligibility
+remains unconfirmed. Template responses are never written to the LLM cache.
+Ranking weights are unchanged.
+
+Verified with LLM_API_KEY=invalid and P2_EXPLAIN_NO_CACHE=1:
+- Adding the demo priority published Verification at #3.
+- Restoring original priorities published Verification back at #4.
+- Reason integrity: 30/30 matches, 49/49 references; zero cross-company refs.
+- Live feed verification passed for all three companies.
+
+The invalid key was scoped to test subprocesses; .env was unchanged.
+Request timeouts can still delay fallback. Invalid-key testing does not
+measure UI latency or reproduce every provider failure.
