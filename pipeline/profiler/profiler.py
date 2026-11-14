@@ -95,7 +95,7 @@ def extract(job):
 
 def dedupe(claims):
     kept = []
-    for c in sorted(claims, key=lambda c: (-rank(c), -len(c.get("quote") or ""))):
+    for c in sorted(claims, key=lambda c: (-rank(c), "/aktuellt/" in (c.get("source_url") or ""), -len(c.get("quote") or ""))):
         same_field = [k for k in kept if k["field"] == c["field"]]
         if len(same_field) >= CAP.get(c["field"], DEFAULT_CAP):
             continue
@@ -106,7 +106,7 @@ def dedupe(claims):
 
 def profile(cid, name):
     docs = [json.loads(p.read_text()) for p in
-            sorted(CACHE.glob(f"member_{cid}.json")) + sorted(CACHE.glob(f"site_{cid}_*.json"))]
+            sorted(CACHE.glob(f"member_{cid}.json")) + sorted(CACHE.glob(f"site_{cid}_*.json")) + sorted(CACHE.glob(f"news_{cid}_*.json"))]
     if not docs:
         raise FileNotFoundError(f"no cached pages for {cid}")
     stats = {"raw": 0, "verified": 0, "demoted": 0, "skipped": 0}
