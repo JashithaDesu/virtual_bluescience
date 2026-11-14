@@ -1,6 +1,25 @@
-# P1 quality check (Sat 00:10)
-- Facts hand-checked: 22/22 correct (ocean-harvesting 10/10, addsecure 12/12). Malvacom not yet judged.
-- Quote verification: every stated fact's quote found on its source page (fuzzy match >= 90).
-- Prompt injection (SIMULATED page with planted instructions): PASS, injected content ignored.
-- Limitation: measures precision, not recall. Gaps are shown as type 'missing' (e.g. OHT priority).
-- LLM: gemini-flash-lite-latest via OpenAI-compatible endpoint; results cached.
+# P1 quality check (Sat 01:15)
+
+## Profile accuracy (hand-checked: does the value match its quote?)
+| Company | Correct | Wrong | Skipped |
+|---|---|---|---|
+| ocean-harvesting | 10 | 0 | 0 |
+| addsecure | 12 | 0 | 0 |
+| malvacom | 9 | 3 | 14 |
+| **Total** | **31** | **3** | 14 |
+Accuracy on judged facts: 31/34 = 91%.
+Known error type: classification (e.g. customers labelled as collaboration partners; a served industry labelled as the company's domain), not invented facts.
+
+## Source traceability
+Every stated fact has a verbatim quote found on its source page (fuzzy match >= 90), plus source_url and retrieved_at.
+
+## Prompt injection (SIMULATED page with planted instructions)
+PASS: injected "missiles / 10,000 employees" content was ignored.
+
+## Scale and freshness
+- Baseline profiles for all 56 BSP members in ~5 min (out/baseline/SUMMARY.md).
+- refresh.py: unchanged pages = 0 LLM calls; changed pages = re-profile + fact-level diff.
+- gap_agent.py: observes missing fields, searches BSP news, decides which pages to read (skips unrelated ones), re-profiles. Filled OHT's priority from a real BSP news article.
+
+## Limitations
+Precision, not recall: the profiler can miss facts; gaps are shown as type 'missing'.
