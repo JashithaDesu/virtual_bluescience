@@ -34,3 +34,22 @@ multilingual embeddings (Swedish <-> English). Score = 40 agreement + 25 source 
 Rule: a fact supported only by news >= 3 years old, with no live page confirming it, is marked STALE.
 Result (3 demo companies, 51 facts): 9 CONFIRMED, 33 PLAUSIBLE, 9 STALE; 1 conflict flagged
 (AddSecure employees: "200+" in text vs 275 in member-page field). Confidence in the profile now reflects this score.
+
+## Corroboration scores (applied)
+Each stated agent fact is checked against every cached source for the same company
+(company website, BSP member page, BSP news) using multilingual embeddings (cosine >= 0.62).
+
+Score (0-100) = 40 agreement (number of supporting sources, max 3) + 25 source quality
+(website 1.0, member page 0.9, news 0.7) + 20 recency + 15 no conflict.
+
+| Label | Rule | Count |
+|---|---|---|
+| CONFIRMED | score >= 75 -> confidence high | 9 |
+| PLAUSIBLE | 50-74 -> confidence medium | 33 |
+| WEAK / STALE | < 50, or only supported by news >= 3 years old -> confidence low | 9 |
+
+- Only `confidence` is updated; claim IDs and values are unchanged (OHT still 30 claims).
+- Example STALE: OHT's 2022 priority from a BSP news article, and 2021 oil-and-gas items.
+- Example conflict: AddSecure size "200+" vs member page "275 employees".
+- RLS re-checked after the update: 5/5 PASS.
+- Report: pipeline/profiler/out/corroboration/corroboration.json

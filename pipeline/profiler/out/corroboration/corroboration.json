@@ -9,7 +9,7 @@
       "sources": 1,
       "supported_by": "news(2021)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -21,7 +21,7 @@
       "sources": 1,
       "supported_by": "news(2020)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -33,7 +33,7 @@
       "sources": 1,
       "supported_by": "news(2021)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -45,7 +45,7 @@
       "sources": 1,
       "supported_by": "news(2020)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -57,7 +57,7 @@
       "sources": 1,
       "supported_by": "news(2021)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -69,7 +69,7 @@
       "sources": 1,
       "supported_by": "news(2022)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -81,7 +81,7 @@
       "sources": 1,
       "supported_by": "news(2022)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -105,7 +105,7 @@
       "sources": 1,
       "supported_by": "news(2022)",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "low",
       "new_confidence": "low"
     },
     {
@@ -117,7 +117,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -129,7 +129,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -141,7 +141,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -153,7 +153,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -165,7 +165,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -177,7 +177,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -189,7 +189,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -201,7 +201,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -213,7 +213,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -263,7 +263,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": "member-page field says 275",
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -275,7 +275,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -287,7 +287,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -299,7 +299,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -311,7 +311,7 @@
       "sources": 1,
       "supported_by": "member_page",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -323,7 +323,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -335,7 +335,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -347,7 +347,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -385,7 +385,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -397,7 +397,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -409,7 +409,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -421,7 +421,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -433,7 +433,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -445,7 +445,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -457,7 +457,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -469,7 +469,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -481,7 +481,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -493,7 +493,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -505,7 +505,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -517,7 +517,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -529,7 +529,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -541,7 +541,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -553,7 +553,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
@@ -565,7 +565,7 @@
       "sources": 1,
       "supported_by": "website",
       "conflict": null,
-      "old_confidence": "high",
+      "old_confidence": "medium",
       "new_confidence": "medium"
     },
     {
