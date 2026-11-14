@@ -65,3 +65,28 @@ Confirm a real UI save updates company_private, the watcher detects it,
 and the refreshed feed displays the changed order.
 The watcher must be checked and running on the actual demo laptop.
 OHT profile claims remain frozen; do not rerun P1 profiling scripts.
+
+## Reset between rehearsals
+Stop the watcher with Ctrl+C and wait for any running rerank to finish.
+Avoid concurrent UI edits during reset.
+
+Preview:
+
+    python -m pipeline.monitor.reset_demo
+
+Apply:
+
+    python -m pipeline.monitor.reset_demo --apply
+    python -m pipeline.monitor.verify_demo
+
+The reset removes only the exact demo priority from OHT user-origin claims
+and private priorities. It never modifies agent claims. It saves a local
+backup, reranks OHT, prints before/after top five, and checks Verification
+of Innovations with Customers is #4. Other priorities remain intact.
+
+Restart the watcher after reset:
+
+    python -m pipeline.monitor.watch
+
+The already-reset case passed verification. Rehearse removal after an
+actual UI edit before relying on the complete reset cycle.
