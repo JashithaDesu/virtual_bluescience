@@ -2,6 +2,10 @@
 import json
 import os
 import re
+from contextvars import ContextVar
+from pipeline.monitor.structured_log import event
+
+EXPLANATION_MODE = ContextVar("explanation_mode", default="llm")
 
 from pipeline.common.llm import chat_json as llm_chat_json
 
@@ -66,6 +70,7 @@ def template_response(user):
 
 
 def chat_json(system, user, **kwargs):
+    EXPLANATION_MODE.set("llm")
     # One attempt: quota failures must not block demo reranking for minutes.
     kwargs["retries"] = 1
     if os.getenv("P2_EXPLAIN_NO_CACHE") == "1":
@@ -73,10 +78,7 @@ def chat_json(system, user, **kwargs):
     try:
         return llm_chat_json(system, user, **kwargs)
     except Exception as exc:
-        print(
-            "LLM explanation unavailable:",
-            type(exc).__name__,
-            "— using uncached same-company templates.",
-            flush=True,
-        )
+        EXPLANATION_MODE.set("template")
+        event("explanation_fallback", reason="template",
+              error_type=type(exc).__name__)
         return template_response(user)
