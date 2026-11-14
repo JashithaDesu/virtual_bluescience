@@ -69,7 +69,7 @@ flowchart TB
 | Check | Result | Evidence |
 |---|---|---|
 | Profile accuracy (hand-checked facts) | **91%** (31/34) | `eval/results/QUALITY.md` |
-| Matching precision@5 (3 companies) | **66.7%** | `eval/results/precision.md` |
+| Matching precision@5 (3 companies, assistant-labelled) | **66.7%** | `eval/results/precision.md` |
 | Data isolation, tested as a real member | **5/5** | `eval/check_db.py` |
 | Prompt-injection test (simulated hostile page) | **PASS** | `eval/injection_test.py` |
 | Match reasons cite only the same company's real facts | **30/30** (49/49 references) | `eval/check_reasons.py` |

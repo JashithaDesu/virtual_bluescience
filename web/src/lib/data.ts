@@ -91,6 +91,8 @@ export async function ask(question: string, accessToken: string): Promise<AskRes
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
     body: JSON.stringify({ question }),
   });
+  // Rate limit: the API sends a friendly answer with HTTP 429, so show it instead of an error.
+  if (res.status === 429) return (await res.json()) as AskResponse;
   if (!res.ok) throw new Error(`/ask: HTTP ${res.status} ${await res.text().catch(() => '')}`.trim());
   return (await res.json()) as AskResponse;
 }
