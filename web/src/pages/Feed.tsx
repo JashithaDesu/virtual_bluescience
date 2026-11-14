@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../lib/auth';
 import { fetchFeed } from '../lib/data';
 import type { FeedItem, OpportunityType } from '../lib/types';
@@ -10,6 +10,7 @@ const TYPE_BADGE: Record<OpportunityType, { label: string; cls: string }> = {
   support: { label: 'Support', cls: 'bg-purple-100 text-purple-800' },
 };
 const FORMAT_LABEL = { online: 'Online', in_person: 'In person' } as const;
+const cleanReason = (r: string) => r.replace(/\s*\[claim [0-9a-f-]+\]/gi, '').replace(/\s{2,}/g, ' ').trim();
 const REFRESH_MS = 3_000;
 
 const fmtDate = (d: string | null) => {
@@ -43,7 +44,7 @@ function Card({ item }: { item: FeedItem }) {
       {item.reason && (
         <div className="mt-3 rounded-md bg-gray-50 p-3 text-sm">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-600">Why this matches</p>
-          <p>{item.reason}</p>
+          <p>{cleanReason(item.reason)}</p>
         </div>
       )}
 
