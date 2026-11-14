@@ -1,5 +1,4 @@
-﻿// The ONLY place that talks to Supabase. Pages call these functions, never supabase directly.
-// Every function has a mock branch so the UI works before the database is ready.
+
 import { supabase, USE_MOCK } from './supabase';
 import { mockClaims, mockCompanies, mockMatches, mockOpportunities, mockPrivate, mockUsers } from './mock';
 import { ASK_URL } from './supabase';
