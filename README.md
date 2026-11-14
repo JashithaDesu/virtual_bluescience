@@ -56,7 +56,7 @@ python -m pipeline.monitor.watch
 # 4. Web app (port 8080)
 cd web && npm install && npm run dev   # web/.env.local: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_ASK_URL
 ```
-Demo accounts: `member-oht@demo.com`, `member-addsecure@demo.com`, `member-malvacom@demo.com`, `staff@demo.com`
+Demo accounts: `member-oht@demo.com`, `member-addsecure@demo.com`, `staff@demo.com`
 (the password is given to the judges separately).
 
 ## Evidence that it works
