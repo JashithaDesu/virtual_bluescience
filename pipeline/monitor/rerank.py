@@ -1,6 +1,8 @@
 import argparse
 import json
 import os
+from pathlib import Path
+from pipeline.monitor.explain_fallback import EXPLANATION_MODE
 from datetime import datetime, timezone
 
 import numpy as np
@@ -22,6 +24,7 @@ def main():
     parser.add_argument("company_id", choices=COMPANIES)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--simulate-priority")
+    parser.add_argument("--report-file", type=Path)
     args = parser.parse_args()
     if args.simulate_priority and not args.dry_run:
         parser.error("--simulate-priority requires --dry-run")
@@ -105,6 +108,20 @@ def main():
         raise RuntimeError("Company embedding verification failed")
 
     saved = publish(args.company_id, rows)
+    if args.report_file:
+        report = {
+            "company": args.company_id,
+            "reason": EXPLANATION_MODE.get(),
+            "top_5_ids": [
+                row["opportunity_id"]
+                for row in sorted(saved, key=lambda row: row["rank"])[:5]
+            ],
+            "match_count": len(saved),
+        }
+        args.report_file.parent.mkdir(parents=True, exist_ok=True)
+        temporary = args.report_file.with_suffix(".tmp")
+        temporary.write_text(json.dumps(report), encoding="utf-8")
+        temporary.replace(args.report_file)
     print("Published and verified:", len(saved), "matches.")
 
 

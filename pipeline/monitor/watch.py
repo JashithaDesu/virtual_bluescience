@@ -1,17 +1,17 @@
 import argparse
+import json
+import logging
 import subprocess
 import sys
 import time
-from datetime import datetime
+from pathlib import Path
+from uuid import uuid4
 
 from pipeline.common import db
+from pipeline.monitor.structured_log import event
 
 COMPANIES = ["ocean-harvesting", "addsecure", "malvacom"]
-
-
-def log(message):
-    print(datetime.now().astimezone().isoformat(timespec="seconds"),
-          message, flush=True)
+CACHE = Path(__file__).resolve().parent / ".cache"
 
 
 def versions():
@@ -21,89 +21,147 @@ def versions():
         .in_("company_id", COMPANIES).execute().data
     )
     result = {row["company_id"]: row["updated_at"] for row in rows}
-    missing = set(COMPANIES) - set(result)
-    if missing:
-        raise RuntimeError("Missing company_private rows: " + ", ".join(missing))
-    if any(value is None for value in result.values()):
-        raise RuntimeError("Missing updated_at timestamp")
+    if set(COMPANIES) - set(result) or any(v is None for v in result.values()):
+        raise RuntimeError("Missing company private-state timestamps")
     return result
+
+
+def start_job(company, version):
+    CACHE.mkdir(exist_ok=True)
+    token = uuid4().hex
+    report = CACHE / f"watch_report_{token}.json"
+    diagnostics = CACHE / f"watch_run_{token}.log"
+    started = time.monotonic()
+    with diagnostics.open("w", encoding="utf-8") as output:
+        process = subprocess.Popen(
+            [
+                sys.executable, "-u", "-m", "pipeline.monitor.rerank",
+                company, "--report-file", str(report),
+            ],
+            stdout=output,
+            stderr=subprocess.STDOUT,
+        )
+    return {
+        "process": process, "company": company, "version": version,
+        "started": started, "report": report, "diagnostics": diagnostics,
+    }
+
+
+def finish_job(job, timed_out=False):
+    code = job["process"].returncode
+    fields = {
+        "company": job["company"],
+        "duration_ms": round((time.monotonic() - job["started"]) * 1000),
+        "exit_code": code,
+    }
+    try:
+        if timed_out or code != 0:
+            raise RuntimeError("timeout" if timed_out else "subprocess_failed")
+        report = json.loads(job["report"].read_text(encoding="utf-8"))
+        if (
+            report.get("company") != job["company"]
+            or report.get("reason") not in {"llm", "template"}
+            or not isinstance(report.get("top_5_ids"), list)
+            or not 1 <= len(report["top_5_ids"]) <= 5
+            or any(not isinstance(value, str) for value in report["top_5_ids"])
+        ):
+            raise ValueError("Invalid completion report")
+        event(
+            "rerank_completed", status="success",
+            reason=report["reason"], top_5_ids=report["top_5_ids"],
+            **fields,
+        )
+        job["diagnostics"].unlink(missing_ok=True)
+        return True
+    except Exception as exc:
+        event(
+            "rerank_completed", level=logging.ERROR, status="failed",
+            reason="unknown", top_5_ids=[],
+            error_type=type(exc).__name__,
+            timed_out=timed_out,
+            diagnostic_log=str(job["diagnostics"]),
+            **fields,
+        )
+        return False
+    finally:
+        job["report"].unlink(missing_ok=True)
+        job["report"].with_suffix(".tmp").unlink(missing_ok=True)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--initial", action="store_true",
-                        help="Also rerank all three companies on startup")
+    parser.add_argument("--initial", action="store_true")
     args = parser.parse_args()
 
     current = versions()
-    log("Connected; private-state timestamps available for all 3 companies.")
+    event("watcher_connected", companies=COMPANIES)
     if args.check:
-        log("CHECK ONLY: no reranks or database writes.")
+        event("watcher_check", status="success", database_writes=False)
         return
 
     completed = {} if args.initial else dict(current)
     retry_after = {}
     running = None
-    log("Watcher started: polling every 5 seconds. Stop with Ctrl+C.")
-    if not args.initial:
-        log("Watching future edits; existing state is the startup baseline.")
+    event("watcher_started", poll_seconds=5, initial_rerank=args.initial)
 
     try:
         while True:
             if running is not None:
-                process, company_id, version, started = running
-                code = process.poll()
-                if code is not None:
-                    if code == 0:
-                        completed[company_id] = version
-                        retry_after.pop(company_id, None)
-                        log(f"Published {company_id}; feed can refresh now.")
+                code = running["process"].poll()
+                timed_out = (
+                    code is None
+                    and time.monotonic() - running["started"] > 300
+                )
+                if timed_out:
+                    running["process"].kill()
+                    running["process"].wait()
+                if code is not None or timed_out:
+                    company = running["company"]
+                    if finish_job(running, timed_out=timed_out):
+                        completed[company] = running["version"]
+                        retry_after.pop(company, None)
                     else:
-                        retry_after[company_id] = time.monotonic() + 30
-                        log(f"Rerank failed for {company_id}; retry after 30s.")
-                    running = None
-                elif time.monotonic() - started > 300:
-                    process.kill()
-                    process.wait()
-                    retry_after[company_id] = time.monotonic() + 30
-                    log(f"Rerank timed out for {company_id}; retry after 30s.")
+                        retry_after[company] = time.monotonic() + 30
                     running = None
 
             try:
                 current = versions()
             except Exception as exc:
-                log("Timestamp poll failed: " + type(exc).__name__)
+                event("timestamp_poll_failed", level=logging.WARNING,
+                      error_type=type(exc).__name__)
                 time.sleep(5)
                 continue
 
             if running is None:
-                for company_id in COMPANIES:
-                    if current[company_id] == completed.get(company_id):
+                for company in COMPANIES:
+                    if current[company] == completed.get(company):
                         continue
-                    if time.monotonic() < retry_after.get(company_id, 0):
+                    if time.monotonic() < retry_after.get(company, 0):
                         continue
-                    log("Detected pending state: " + company_id)
-                    process = subprocess.Popen([
-                        sys.executable, "-u", "-m",
-                        "pipeline.monitor.rerank", company_id,
-                    ])
-                    running = (
-                        process, company_id, current[company_id],
-                        time.monotonic(),
-                    )
+                    try:
+                        running = start_job(company, current[company])
+                    except Exception as exc:
+                        retry_after[company] = time.monotonic() + 30
+                        event("rerank_start_failed", level=logging.ERROR,
+                              company=company, error_type=type(exc).__name__)
                     break
             time.sleep(5)
     except KeyboardInterrupt:
-        log("Stopping watcher.")
+        event("watcher_stopping")
     finally:
-        if running is not None and running[0].poll() is None:
-            running[0].terminate()
-            try:
-                running[0].wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                running[0].kill()
-                running[0].wait()
+        if running is not None:
+            process = running["process"]
+            if process.poll() is None:
+                process.terminate()
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                finish_job(running, timed_out=True)
+            else:
+                finish_job(running)
 
 
 if __name__ == "__main__":

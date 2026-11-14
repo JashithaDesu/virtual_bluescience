@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-11-14T21:49:16.190358+00:00",
+  "runs": [
+    {
+      "expected_reason": "template",
+      "observed_reason": "template",
+      "duration_ms": 17016,
+      "company": "ocean-harvesting",
+      "top_5_ids": [
+        "ac0a798b-39e8-5909-9ca4-5f014bd546ba",
+        "25427d73-1aef-5ba1-b056-97cb7d10c3c3",
+        "60921301-5811-5960-9e07-1f6bb981be39",
+        "c63f9ed1-f787-5f06-811e-30e99c01cd0d",
+        "1e82b691-815f-5f66-a676-cc3ade3c2649"
+      ],
+      "success": true
+    },
+    {
+      "expected_reason": "llm",
+      "observed_reason": "llm",
+      "duration_ms": 10312,
+      "company": "ocean-harvesting",
+      "top_5_ids": [
+        "ac0a798b-39e8-5909-9ca4-5f014bd546ba",
+        "25427d73-1aef-5ba1-b056-97cb7d10c3c3",
+        "60921301-5811-5960-9e07-1f6bb981be39",
+        "c63f9ed1-f787-5f06-811e-30e99c01cd0d",
+        "1e82b691-815f-5f66-a676-cc3ade3c2649"
+      ],
+      "success": true
+    }
+  ],
+  "llm_mode_includes_cached_llm_output": true
+}
