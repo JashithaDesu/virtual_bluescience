@@ -45,6 +45,11 @@ Rules:
 - Cover as many of these fields as the page supports: offering, technology, application_area, market,
   customer_group, geography, priority, collaboration.
 - field "domain": value must be one of: {", ".join(DOMAINS)}.
+- field "collaboration": only named partners in joint projects, or an owner/group the company
+  belongs to. Customers or clients go in "customer_group", never in "collaboration".
+- field "domain": what the company ITSELF does, not the industries its customers are in.
+- Ignore privacy-policy, cookie and legal text (e.g. GDPR, data protection authority).
+- Every part of value must be supported by the quote. Do not add words the quote does not say.
 - Never invent numbers, customers, partners or plans. If unsure, leave it out.
 - At most 25 claims."""
 
