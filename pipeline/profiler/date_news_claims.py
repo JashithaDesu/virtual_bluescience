@@ -23,7 +23,7 @@ def main(cid, apply):
         if url not in dates:
             dates[url] = published(url)
         d = dates[url]
-        if not d or "(BSP news" in (r["value"] or ""):
+        if not d or r["field"] == "domain" or "(BSP news" in (r["value"] or ""):
             print(f"  skip  {r['field']:<14} {r['value']}  (date={d})")
             continue
         new_value = f"{r['value']} (BSP news, {MONTHS[d[1]-1]} {d[0]})"
