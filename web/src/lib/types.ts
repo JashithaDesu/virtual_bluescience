@@ -1,4 +1,4 @@
-// Shapes copied from TEAM CONTRACT v1.5. Do not rename anything.
+﻿// Shapes copied from TEAM CONTRACT v1.5. Do not rename anything.
 export type ClaimField =
   | 'offering' | 'technology' | 'expertise' | 'application_area' | 'market'
   | 'customer_group' | 'geography' | 'priority' | 'collaboration' | 'domain'
@@ -51,3 +51,12 @@ export interface Membership { user_id: string; company_id: string | null; role: 
 
 export interface AskSource { title: string; url: string; date: string | null }
 export interface AskResponse { answer: string; route: AskRoute; sources: AskSource[] }
+
+// Feed row as returned by: matches.select('rank, score, reason, opportunity:opportunities(...)')
+export type FeedOpportunity = Pick<Opportunity,
+  'id' | 'title' | 'type' | 'url' | 'source' | 'date_or_deadline' | 'format' | 'audience'
+  | 'eligibility' | 'eligibility_note' | 'next_step' | 'is_simulated'>;
+export interface FeedItem {
+  rank: number | null; score: number | null; reason: string | null;
+  opportunity: FeedOpportunity | null;
+}

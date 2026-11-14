@@ -10,3 +10,5 @@ cache/
 .env*
 node_modules/
 dist/
+.env.*
+!.env.example
