@@ -4,6 +4,8 @@ import type { FeedItem } from '../lib/types';
 
 const DEMO = ['ocean-harvesting', 'addsecure', 'malvacom'];
 
+const cleanReason = (r: string) => r.replace(/\s*\[claim [0-9a-f-]+\]/gi, '').replace(/\s{2,}/g, ' ').trim();
+
 type Column = { items: FeedItem[]; error?: string; loading: boolean };
 
 const TYPE_STYLE: Record<string, string> = {
@@ -106,7 +108,7 @@ export default function Compare() {
                 <a href={o.url} target="_blank" rel="noreferrer" className="font-medium text-blue-700 underline">
                   {o.title}
                 </a>
-                {it.reason && <p className="mt-1 text-sm text-gray-700">{it.reason}</p>}
+                {it.reason && <p className="mt-1 text-sm text-gray-700">{cleanReason(it.reason)}</p>}
               </li>
             );
           })}
