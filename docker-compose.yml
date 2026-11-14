@@ -1,0 +1,65 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    environment:
+      SUPABASE_URL: ${SUPABASE_URL:?Set SUPABASE_URL in .env}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:?Set the public Supabase key in .env}
+      LLM_BASE_URL: ${LLM_BASE_URL:?Set LLM_BASE_URL in .env}
+      LLM_API_KEY: ${LLM_API_KEY:?Set LLM_API_KEY in .env}
+      LLM_MODEL: ${LLM_MODEL:?Set LLM_MODEL in .env}
+      ALLOWED_ORIGINS: http://localhost:5180,http://127.0.0.1:5180
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - api_llm_cache:/app/.llm_cache
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import json,urllib.request; d=json.load(urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=10)); assert d['ok'] and d['db']"
+      interval: 15s
+      timeout: 12s
+      retries: 5
+      start_period: 20s
+
+  watcher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: watcher
+    environment:
+      SUPABASE_URL: ${SUPABASE_URL:?Set SUPABASE_URL in .env}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:?Set the server key in .env}
+      LLM_BASE_URL: ${LLM_BASE_URL:?Set LLM_BASE_URL in .env}
+      LLM_API_KEY: ${LLM_API_KEY:?Set LLM_API_KEY in .env}
+      LLM_MODEL: ${LLM_MODEL:?Set LLM_MODEL in .env}
+      EMBED_MODEL: ${EMBED_MODEL:-paraphrase-multilingual-MiniLM-L12-v2}
+    volumes:
+      - embedding_models:/cache/huggingface
+      - watcher_llm_cache:/app/.llm_cache
+      - watcher_state:/app/pipeline/monitor/.cache
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    environment:
+      VITE_SUPABASE_URL: ${SUPABASE_URL:?Set SUPABASE_URL in .env}
+      VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:?Set the public Supabase key in .env}
+      VITE_ASK_URL: http://localhost:8000
+      VITE_USE_MOCK: "false"
+    ports:
+      - "127.0.0.1:5180:5180"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  api_llm_cache:
+  watcher_llm_cache:
+  embedding_models:
+  watcher_state:
