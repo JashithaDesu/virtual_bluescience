@@ -22,6 +22,12 @@ jobs:
         run: pytest tests -q
       - name: Match publication tests
         run: pytest eval/test_match_publication.py -q
+      - name: Structured logging tests
+        env:
+          LLM_BASE_URL: http://127.0.0.1:9/v1/
+          LLM_API_KEY: ci-placeholder
+          LLM_MODEL: ci-test-model
+        run: python eval/test_structured_logging.py
       - name: API tests (guard + rate limit)
         run: pytest api -q
 
