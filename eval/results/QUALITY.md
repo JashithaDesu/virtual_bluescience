@@ -23,3 +23,7 @@ PASS: injected "missiles / 10,000 employees" content was ignored.
 
 ## Limitations
 Precision, not recall: the profiler can miss facts; gaps are shown as type 'missing'.
+
+## Privacy (RLS) tested as a logged-in member (member-oht@demo.com), Sat 01:50
+5/5 PASS: sees own claims (30) and other companies' public agent claims (21);
+CANNOT see another company's matches, private data (priorities/corrections) or chat (0 rows each).

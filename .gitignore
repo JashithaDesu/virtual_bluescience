@@ -8,3 +8,5 @@ pipeline/profiler/cache/
 pipeline/profiler/out/
 cache/
 .env*
+eval/fix_logins.py
+eval/check_logins.py
