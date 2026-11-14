@@ -8,3 +8,5 @@ pipeline/profiler/cache/
 pipeline/profiler/out/
 cache/
 .env*
+node_modules/
+dist/
