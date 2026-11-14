@@ -64,4 +64,3 @@ Score (0-100) = 40 agreement (number of supporting sources, max 3) + 25 source q
 - The June 2022 low-confidence (STALE) priority is excluded from ranking.
 - Reason integrity: 30/30 matches PASS; 46/46 claim references valid; 0 missing, 0 cross-company, 0 malformed.
 - Backend re-rank time (watcher): 20.4 s, 20.3 s. UI timing: see below.
-- UI re-rank time (add priority -> #3 visible): __ s; remove -> back to #4: __ s.
