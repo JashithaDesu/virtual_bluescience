@@ -27,3 +27,10 @@ Precision, not recall: the profiler can miss facts; gaps are shown as type 'miss
 ## Privacy (RLS) tested as a logged-in member (member-oht@demo.com), Sat 01:50
 5/5 PASS: sees own claims (30) and other companies' public agent claims (21);
 CANNOT see another company's matches, private data (priorities/corrections) or chat (0 rows each).
+
+## Corroboration score per fact (Sat 03:40)
+Each stated fact is checked against all cached sources (company website, BSP member page, BSP news) with
+multilingual embeddings (Swedish <-> English). Score = 40 agreement + 25 source quality + 20 recency + 15 no conflict.
+Rule: a fact supported only by news >= 3 years old, with no live page confirming it, is marked STALE.
+Result (3 demo companies, 51 facts): 9 CONFIRMED, 33 PLAUSIBLE, 9 STALE; 1 conflict flagged
+(AddSecure employees: "200+" in text vs 275 in member-page field). Confidence in the profile now reflects this score.
