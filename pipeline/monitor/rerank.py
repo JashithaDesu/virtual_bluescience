@@ -21,7 +21,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("company_id", choices=COMPANIES)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--simulate-priority")
     args = parser.parse_args()
+    if args.simulate_priority and not args.dry_run:
+        parser.error("--simulate-priority requires --dry-run")
 
     load_dotenv()
     name = os.getenv("EMBED_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
@@ -29,6 +32,11 @@ def main():
     model = SentenceTransformer(name, device=device)
 
     profile = load_profile(args.company_id)
+    source_signature = signature(profile)
+    if args.simulate_priority:
+        profile["priorities"] = profile["priorities"] + [args.simulate_priority]
+        print("SIMULATED user priority:", args.simulate_priority)
+        print("Preview only; no company fact or live priority is changed.")
     profile["embedding"] = embed_profile(model, profile)
 
     # Limit to this pipeline's opportunities, excluding unrelated seed rows.
@@ -57,7 +65,7 @@ def main():
     rows = explain_profile(profile, ranked, opportunities)
 
     # Detect edits made while embeddings/reasons were being generated.
-    if signature(load_profile(args.company_id)) != signature(profile):
+    if signature(load_profile(args.company_id)) != source_signature:
         raise RuntimeError("Profile changed during rerank; run again")
 
     titles = {item["id"]: item["title"] for item in opportunities}

@@ -179,3 +179,25 @@ This does not establish that recommended calls are EU funding.
 
 Human precision@5 evaluation was not completed. No precision score is claimed.
 Full UI edit-to-feed integration remains pending P4 readiness.
+
+## Final demo refinements
+Low-confidence agent-generated priority claims are excluded from matching
+and explanation inputs. This prevents OHT's June 2022 testing plan from
+being treated as a current priority. Stored profile claims are unchanged;
+user-entered priorities remain included.
+
+Read-only priority preview requires --dry-run:
+
+    python -m pipeline.monitor.rerank ocean-harvesting --dry-run \
+      --simulate-priority "Testing and validating our technology with a potential customer is a priority"
+
+After excluding the historical priority, the validated preview showed:
+- Verification of Innovations with Customers: rank 4 -> 3.
+- Concept Development: rank 3 -> 4.
+- MTCoS remained first; score changed from approximately 0.680 to 0.840.
+These are simulated user preferences, not agent-discovered company facts.
+Funding remains a potential match; eligibility is not established.
+
+The corrected OHT baseline was published and all three feeds passed
+verification afterward. See DEMO_CHECKLIST.md for laptop startup,
+watcher operation, rehearsal and manual fallback.

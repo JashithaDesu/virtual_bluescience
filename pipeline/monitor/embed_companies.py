@@ -31,7 +31,7 @@ def load_profile(company_id, private_override=None):
     rejected = set(private.get("rejected_claim_ids") or [])
     claims = (
         client.table("profile_claims")
-        .select("id,field,value,type,origin,source_url,is_simulated")
+        .select("id,field,value,type,origin,source_url,is_simulated,confidence")
         .eq("company_id", company_id)
         .neq("type", "missing")
         .execute().data
@@ -39,6 +39,11 @@ def load_profile(company_id, private_override=None):
     accepted = [
         claim for claim in claims
         if claim["id"] not in rejected
+        and not (
+            claim["origin"] == "agent"
+            and claim["field"] == "priority"
+            and claim.get("confidence") == "low"
+        )
         and str(claim.get("value") or "").strip()
         and (claim["field"] in FIELDS or claim["origin"] == "user")
     ]
