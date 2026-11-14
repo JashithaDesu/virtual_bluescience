@@ -12,12 +12,12 @@ interface Turn { question: string; res?: AskResponse; error?: string }
 function Answer({ res, simulated }: { res: AskResponse; simulated: boolean }) {
   const neutral = res.route === 'refused' || res.route === 'unrelated' || res.route === 'unclear';
   const box =
-    res.route === 'in_scope' ? 'border-gray-200 bg-white'
-    : res.route === 'refer_to_staff' ? 'border-amber-300 bg-amber-50'
-    : neutral ? 'border-gray-200 bg-gray-50 text-gray-700'
-    : 'border-blue-200 bg-blue-50'; // unclear
+    res.route === 'in_scope' ? 'border-brand-200 border-l-brand-500 bg-brand-50'
+    : res.route === 'refer_to_staff' ? 'border-amber-300 border-l-amber-500 bg-amber-50'
+    : neutral ? 'border-gray-200 border-l-gray-400 bg-gray-50 text-gray-700'
+    : 'border-blue-200 border-l-blue-400 bg-blue-50'; // unclear
   return (
-    <div className={`rounded-lg border p-3 text-sm ${box}`}>
+    <div className={`rounded-lg border border-l-4 p-3 text-sm ${box}`}>
       {simulated && <span className="mb-2 inline-block rounded bg-gray-800 px-2 py-0.5 text-xs font-medium text-white">SIMULATED answer</span>}
 <p className="whitespace-pre-wrap">{res.answer}</p>
       {res.route === 'refer_to_staff' && (

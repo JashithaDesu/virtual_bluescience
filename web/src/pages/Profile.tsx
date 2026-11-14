@@ -255,12 +255,12 @@ export default function Profile() {
             <p className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">Could not save: {saveError}</p>
           )}
           <p className="mb-4 text-sm text-gray-600">
-            {counts.stated} facts · {counts.inferred} guesses · {counts.missing} missing
+            <span className="grid grid-cols-3 gap-3"><span className="rounded-lg border border-green-200 bg-green-50 p-3"><span className="block text-2xl font-semibold text-green-800">{counts.stated}</span><span className="text-xs font-medium uppercase tracking-wide text-green-800">Facts with a source</span></span><span className="rounded-lg border border-blue-200 bg-blue-50 p-3"><span className="block text-2xl font-semibold text-blue-800">{counts.inferred}</span><span className="text-xs font-medium uppercase tracking-wide text-blue-800">Guesses</span></span><span className="rounded-lg border border-gray-200 bg-gray-100 p-3"><span className="block text-2xl font-semibold text-gray-700">{counts.missing}</span><span className="text-xs font-medium uppercase tracking-wide text-gray-600">Missing</span></span></span>
           </p>
           <div className="space-y-6">
             {grouped.map(([field, items]) => (
               <section key={field}>
-                <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-700">{FIELD_LABELS[field]}</h2>
+                <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-gray-700"><span className="h-2.5 w-2.5 rounded-full bg-brand-500" />{FIELD_LABELS[field]}</h2>
                 <ul className="space-y-2">
                   {items.map((c) => (
                     <ClaimRow key={c.id} c={c} rejected={rejectedIds.has(c.id)} busy={busy}
