@@ -17,6 +17,9 @@ import llm as _llm
 _llm.client = _llm.client.with_options(timeout=20)   # live /ask: max 20 s per call
 from llm import chat_json
 from guard import rule_route
+from ratelimit import RateLimiter
+LIMITER = RateLimiter(limit=int(os.getenv('ASK_RATE_LIMIT', '10')), window=60)
+RATE_MSG = 'Too many questions, please wait a minute and try again.'
 
 URL, ANON = os.environ["SUPABASE_URL"], os.environ["SUPABASE_ANON_KEY"]
 ROUTES = {"in_scope", "unrelated", "unclear", "refused", "refer_to_staff"}
@@ -159,6 +162,10 @@ def health():
 @app.post("/ask", response_model=AskOut)
 def ask(body: AskIn, authorization: str = Header(...)):
     sb, user = user_client(authorization)
+    ok, retry = LIMITER.check(user.id)
+    if not ok:
+        return JSONResponse(status_code=429, headers={'Retry-After': str(retry)},
+                            content={'answer': RATE_MSG, 'route': 'rate_limited', 'sources': []})
     m = sb.table("memberships").select("company_id,role").execute().data
     if not m:
         raise HTTPException(403, "this account has no company membership")
