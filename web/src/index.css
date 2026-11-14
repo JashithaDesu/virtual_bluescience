@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { @apply bg-gray-50 text-gray-800; }
+  main h1 { @apply tracking-tight text-gray-900; }
+  input, textarea, select { @apply transition-shadow; }
+  input:focus, textarea:focus, select:focus { @apply border-brand-500 outline-none ring-2 ring-brand-100; }
+  button { @apply transition-colors; }
+  a { @apply transition-colors; }
+}
+
+/* Cards on every page get a soft shadow, without touching the page files. */
+main li.rounded-lg, main li.rounded-md, main section.rounded-lg { @apply shadow-card; }

@@ -11,6 +11,7 @@ const TYPE_BADGE: Record<OpportunityType, { label: string; cls: string }> = {
   support: { label: 'Support', cls: 'bg-purple-100 text-purple-800' },
 };
 const FORMAT_LABEL = { online: 'Online', in_person: 'In person' } as const;
+const STRIPE: Record<string, string> = { funding: 'border-l-amber-400', event: 'border-l-blue-400', testbed: 'border-l-brand-500', support: 'border-l-purple-400' };
 const cleanReason = (r: string) => r.replace(/\s*\[claim [0-9a-f-]+\]/gi, '').replace(/\s{2,}/g, ' ').trim();
 const REFRESH_MS = 3_000;
 const MOVE_SHOW_MS = 60_000;     // rank arrows stay visible this long
@@ -43,7 +44,7 @@ function Card({ item, move }: { item: FeedItem; move?: Move }) {
   const badge = TYPE_BADGE[o.type] ?? { label: o.type, cls: 'bg-gray-200 text-gray-700' };
   const when = fmtDate(o.date_or_deadline);
   return (
-    <li className={`rounded-lg border bg-white p-4 ${move ? 'border-green-400 ring-2 ring-green-200' : 'border-gray-200'}`}>
+    <li className={`rounded-lg border border-l-4 bg-white p-4 ${STRIPE[o.type] ?? 'border-l-gray-300'} ${move ? 'border-green-400 ring-2 ring-green-200' : 'border-gray-200'}`}>
       <div className="mb-2 flex flex-wrap items-center gap-2">
         {item.rank != null && <span className="text-sm font-bold text-gray-500">#{item.rank}</span>}
         {move && <MoveBadge move={move} rank={item.rank} />}
