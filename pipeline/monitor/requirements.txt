@@ -1,0 +1,7 @@
+httpx>=0.28,<1
+beautifulsoup4>=4.12,<5
+pydantic>=2,<3
+python-dotenv>=1,<2
+openai>=1,<4
+sentence-transformers>=3,<6
+supabase==2.34.1
