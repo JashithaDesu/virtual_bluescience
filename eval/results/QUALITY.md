@@ -53,3 +53,14 @@ Score (0-100) = 40 agreement (number of supporting sources, max 3) + 25 source q
 - Example conflict: AddSecure size "200+" vs member page "275 employees".
 - RLS re-checked after the update: 5/5 PASS.
 - Report: pipeline/profiler/out/corroboration/corroboration.json
+
+## Matching checks (P2, after corroboration was applied)
+- verify_demo: PASS for all 3 companies; no ranking weights changed.
+- OHT baseline top 5: 1 Marine Technology Center of Sweden, 2 Marine Innovation Day,
+  3 Concept Development of Business-Focused Innovations, 4 Verification of Innovations with Customers,
+  5 India-Sweden Innovations' Accelerator.
+- Demo edit (add priority "testing/validating with a potential customer"): Verification #4 -> #3,
+  Concept Development #3 -> #4.
+- The June 2022 low-confidence (STALE) priority is excluded from ranking.
+- Reason integrity: 30/30 matches PASS; 46/46 claim references valid; 0 missing, 0 cross-company, 0 malformed.
+- Backend re-rank time (watcher): 20.4 s, 20.3 s. UI timing: see below.
