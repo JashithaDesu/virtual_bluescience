@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+﻿import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../lib/auth';
 import { fetchFeed } from '../lib/data';
 import type { FeedItem, OpportunityType } from '../lib/types';
@@ -10,7 +10,7 @@ const TYPE_BADGE: Record<OpportunityType, { label: string; cls: string }> = {
   support: { label: 'Support', cls: 'bg-purple-100 text-purple-800' },
 };
 const FORMAT_LABEL = { online: 'Online', in_person: 'In person' } as const;
-const REFRESH_MS = 10_000;
+const REFRESH_MS = 3_000;
 
 const fmtDate = (d: string | null) => {
   if (!d) return null;
@@ -34,7 +34,7 @@ function Card({ item }: { item: FeedItem }) {
           <span className="rounded bg-gray-800 px-2 py-0.5 text-xs font-medium text-white">SIMULATED</span>
         )}
         {when && <span className="text-xs text-gray-600">{o.type === 'funding' ? 'Deadline' : 'Date'}: {when}</span>}
-        {o.format && <span className="text-xs text-gray-600">· {FORMAT_LABEL[o.format]}</span>}
+        {o.format && <span className="text-xs text-gray-600">Â· {FORMAT_LABEL[o.format]}</span>}
       </div>
 
       <h2 className="font-semibold">{o.title}</h2>
@@ -102,11 +102,11 @@ export default function Feed() {
         </button>
       </div>
       <p className="mb-6 text-sm text-gray-500">
-        Matched to {company.name}'s profile · updates every 10 s
-        {updatedAt && ` · last checked ${updatedAt.toLocaleTimeString('en-GB')}`}
+        Matched to {company.name}'s profile Â· updates every 3 s
+        {updatedAt && ` Â· last checked ${updatedAt.toLocaleTimeString('en-GB')}`}
       </p>
 
-      {loading && items.length === 0 && <p className="text-gray-500">Loading opportunities…</p>}
+      {loading && items.length === 0 && <p className="text-gray-500">Loading opportunitiesâ€¦</p>}
       {error && <p className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">Could not load opportunities: {error}</p>}
       {!loading && !error && items.length === 0 && <p className="text-gray-500">No matches yet for this company.</p>}
 

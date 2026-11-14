@@ -9,7 +9,7 @@ const STAFF_URL = 'https://www.bluesciencepark.se/kontakt/kontaktpersoner/';
 interface Turn { question: string; res?: AskResponse; error?: string }
 
 function Answer({ res }: { res: AskResponse }) {
-  const neutral = res.route === 'refused' || res.route === 'unrelated';
+  const neutral = res.route === 'refused' || res.route === 'unrelated' || res.route === 'unclear';
   const box =
     res.route === 'in_scope' ? 'border-gray-200 bg-white'
     : res.route === 'refer_to_staff' ? 'border-amber-300 bg-amber-50'
