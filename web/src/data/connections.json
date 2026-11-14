@@ -1,0 +1,176 @@
+{
+  "by_company": {
+    "ocean-harvesting": {
+      "candidates": [
+        "lassen-construction",
+        "nkt",
+        "njord-x",
+        "embeddedart",
+        "techinova",
+        "energimyndigheten"
+      ],
+      "suggestions": [
+        {
+          "partner": "lassen-construction",
+          "basis_a": "Wave power plants at sea",
+          "basis_b": "marine construction in coastal and water environments",
+          "why": "Lassen Construction could potentially provide marine construction services for the deployment and installation of ocean-harvesting's wave power plants.",
+          "confidence": "high",
+          "similarity": 0.582,
+          "already_connected": false
+        },
+        {
+          "partner": "nkt",
+          "basis_a": "Wave energy conversion",
+          "basis_b": "Power transmission, renewable energy and offshore wind power",
+          "why": "NKT might be able to supply high-voltage cables to connect ocean-harvesting's offshore wave energy converters to the main power grid.",
+          "confidence": "high",
+          "similarity": 0.548,
+          "already_connected": false
+        },
+        {
+          "partner": "njord-x",
+          "basis_a": "InfinityWEC wave energy converter",
+          "basis_b": "project management, installation, commissioning, service, and support",
+          "why": "Njord-X could potentially assist with the installation, commissioning, and ongoing service for ocean-harvesting's wave energy converter systems.",
+          "confidence": "medium",
+          "similarity": 0.533,
+          "already_connected": false
+        }
+      ],
+      "dropped_by_guardrail": 0
+    },
+    "addsecure": {
+      "candidates": [
+        "mj-marcable-consulting-ab",
+        "spirius",
+        "nkt",
+        "techinova",
+        "ericsson",
+        "energimyndigheten"
+      ],
+      "suggestions": [
+        {
+          "partner": "mj-marcable-consulting-ab",
+          "basis_a": "Power grid digitalization and monitoring",
+          "basis_b": "Power cable industry",
+          "why": "Addsecure could integrate its communication platforms with MJ Marcable Consulting's industry expertise to enhance power cable monitoring solutions.",
+          "confidence": "medium",
+          "similarity": 0.545,
+          "already_connected": false
+        },
+        {
+          "partner": "nkt",
+          "basis_a": "Secure critical communication and data transmission for power grids",
+          "basis_b": "Power transmission, renewable energy and offshore wind power",
+          "why": "Addsecure might provide secure communication solutions for NKT's high-voltage power transmission and offshore wind power projects.",
+          "confidence": "high",
+          "similarity": 0.493,
+          "already_connected": false
+        },
+        {
+          "partner": "techinova",
+          "basis_a": "analysis and fault detection in power grids",
+          "basis_b": "Radio networks and automation",
+          "why": "Addsecure and Techinova could combine their fault detection and radio network technologies to offer comprehensive grid automation solutions.",
+          "confidence": "medium",
+          "similarity": 0.469,
+          "already_connected": false
+        }
+      ],
+      "dropped_by_guardrail": 0
+    },
+    "malvacom": {
+      "candidates": [
+        "techinova",
+        "nexer",
+        "knowit",
+        "cleura",
+        "dxc-technology",
+        "allbinary"
+      ],
+      "suggestions": [
+        {
+          "partner": "techinova",
+          "basis_a": "embedded firmware, mobile platforms, web, system integration, AI automation",
+          "basis_b": "Develops and manufactures products with electronics and software",
+          "why": "Malvacom's expertise in embedded programming and system integration could complement Techinova's hardware and electronics manufacturing to build smarter connected devices.",
+          "confidence": "high",
+          "similarity": 0.701,
+          "already_connected": false
+        },
+        {
+          "partner": "allbinary",
+          "basis_a": "energy sector, marine industry, fintech, proptech, foodservice, public sector",
+          "basis_b": "Proptech, marinetech, telecom, and defense industry",
+          "why": "Given their shared focus on proptech and marine industries, Malvacom's software development capabilities could support Allbinary's technology investments and consulting projects.",
+          "confidence": "medium",
+          "similarity": 0.545,
+          "already_connected": true
+        },
+        {
+          "partner": "cleura",
+          "basis_a": "Cloud services, support, management, embedded and IoT programming",
+          "basis_b": "Compliant Cloud, public cloud, and private cloud",
+          "why": "Malvacom's cloud services and software solutions could be hosted on Cleura's compliant cloud infrastructure to serve clients with strict regulatory requirements.",
+          "confidence": "medium",
+          "similarity": 0.564,
+          "already_connected": false
+        }
+      ],
+      "dropped_by_guardrail": 0
+    }
+  },
+  "top_pairs": [
+    [
+      0.7727246880531311,
+      "dxc-technology",
+      "nicon"
+    ],
+    [
+      0.7467952966690063,
+      "atea",
+      "nicon"
+    ],
+    [
+      0.7456222176551819,
+      "ericsson",
+      "telenor"
+    ],
+    [
+      0.7425913214683533,
+      "lassen-construction",
+      "njord-x"
+    ],
+    [
+      0.7323542833328247,
+      "embeddedart",
+      "njord-x"
+    ],
+    [
+      0.7263842225074768,
+      "embeddedart",
+      "forsvarsmakten"
+    ],
+    [
+      0.7262474298477173,
+      "baltic-offshore",
+      "nkt"
+    ],
+    [
+      0.7179276943206787,
+      "hiq",
+      "nexer"
+    ],
+    [
+      0.7126964926719666,
+      "dxc-technology",
+      "hiq"
+    ],
+    [
+      0.7116372585296631,
+      "atea",
+      "dxc-technology"
+    ]
+  ]
+}

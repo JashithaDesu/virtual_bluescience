@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { fetchCompany, fetchFeed } from '../lib/data';
 import type { FeedItem } from '../lib/types';
+import Connections from '../components/Connections';
 
 const DEMO = ['ocean-harvesting', 'addsecure', 'malvacom'];
 
@@ -140,6 +141,10 @@ export default function Compare() {
       <div className="grid gap-4 md:grid-cols-2">
         {column(left)}
         {column(right)}
+      </div>
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <Connections companyId={left} names={names} />
+        <Connections companyId={right} names={names} />
       </div>
     </div>
   );
