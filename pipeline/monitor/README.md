@@ -122,3 +122,60 @@ citations, links, retrieval dates, next steps and potential-only funding.
 - P4 still needs to verify a real user correction + manual rerank + feed reload.
 - No watcher, cron, alerts, staff dashboard or extra sources are required
   for the Saturday prototype.
+
+## Automatic reranking — added after initial handover
+The optional watcher is now implemented and live-tested. This supersedes
+the earlier statements that no watcher exists.
+
+Start exactly one watcher from the repository root:
+
+    export PYTHONUTF8=1
+    python -m pipeline.monitor.watch
+
+It polls company_private.updated_at every five seconds and runs one
+company rerank at a time. Further edits remain pending while a rerank
+runs. Failed reranks retry after 30 seconds.
+Stop with Ctrl+C. Keep the terminal/laptop running during the demo.
+
+Default startup watches future edits only. To refresh all companies
+on startup:
+
+    python -m pipeline.monitor.watch --initial
+
+Connection-only check:
+
+    python -m pipeline.monitor.watch --check
+
+Do not run manual reranks concurrently with the watcher.
+P1 profile refreshes do not trigger this watcher; manually rerank those
+companies when P1 announces changed profiles.
+Publication is not transactional; a feed may briefly see partial updates.
+
+Observed live test:
+- Simulated testing-priority edit published after 20.4 seconds.
+- Original priorities restored and baseline scoring published after 20.3 seconds.
+- OHT profile claims were not modified.
+These timings are observations, not latency guarantees. UI polling adds
+up to another ten seconds after publication.
+
+Optional reversible live test, while the watcher is already running:
+
+    python -m pipeline.monitor.test_watch
+
+Run the test in a second terminal. Avoid concurrent edits to OHT during it.
+The test backs up private state locally and uses a timestamp condition
+to avoid overwriting concurrent changes.
+
+## Latest verification and evaluation status
+After P1 refreshed AddSecure and Malvacom, both were reranked successfully.
+All three feeds passed live verification, with 30 matches at that check.
+OHT remained frozen; no P1 profiling scripts were run on it.
+
+The oil-and-gas rejection / EU scale-up priority comparison was simulated:
+- Rejection alone: no top-five rank changes.
+- Priority alone: Verification moved 4 to 3; Concept Development 3 to 4.
+- Combined edits: original top-five order remained; scores changed.
+This does not establish that recommended calls are EU funding.
+
+Human precision@5 evaluation was not completed. No precision score is claimed.
+Full UI edit-to-feed integration remains pending P4 readiness.
