@@ -1,5 +1,5 @@
 """api/guard.py · P3 · rule layer of the /ask guard (pure functions, unit-tested).
-Runs BEFORE the LLM: overrides, cross-company requests and eligibility never depend on the model."""
+Runs BEFORE the LLM: overrides, role switches, cross-company requests and eligibility never depend on the model."""
 import re
 
 OVERRIDE = [
@@ -8,12 +8,20 @@ OVERRIDE = [
     r"role ?-?play", r"jailbreak", r"developer mode", r"forget (your|all|the|previous)",
     r"(reveal|show|print|repeat) (me )?(your|the) (prompt|instructions|rules)",
     r"disregard (your|the|all)", r"new (role|persona)",
+    r"(switch|change|give|upgrade|elevate) (me |my |your )?(role|permissions?|access)",
+    r"\bi'?m (now )?(a |the )?(bsp |blue science park )?(staff|admin|administrator)\b",
+    r"\b(unrestricted|admin(istrator)?|superuser|root) (mode|access|user)\b",
+    r"(every|all) compan(y|ies)'?s?\b.*\b(private|notes|priorit|chats?|matches)",
 ]
-PRIVATE_WORDS = r"(priorit|correction|note|match|chat|conversation|feedback|saved|private|rejected|internal|secret|edit)"
+PRIVATE_WORDS = (r"(priorit|correction|note|match|recommend|ranking|chat|conversation|feedback|saved|private|"
+                 r"rejected|internal|secret|edit)")
+FOLLOW_UP = r"\b(same|too|also|as well|what about|how about|and for)\b"
 ELIGIBILITY = [
     r"\b(are we|am i|is (my|our) company|are they) eligible\b", r"\bguarantee", r"\bapprove (our|my|us|the)\b",
+    r"\breserve (the |our )?(money|funds?|funding|place|slot)\b",
     r"\bcommit(ment)? to\b", r"\bpromise\b", r"\bwill (bsp|blue science park|you) (fund|pay|sponsor)\b",
     r"\bsign (a|the|our) (contract|agreement)\b", r"\blegal advice\b",
+    r"\b(är vi|kan vi få) (berättigade|behöriga)\b", r"\bgarantera\b",
 ]
 
 def mentioned_companies(text, companies, own_id):
@@ -36,6 +44,8 @@ def rule_route(question, history, companies, own_id):
     others = mentioned_companies(question, companies, own_id)
     if others and re.search(PRIVATE_WORDS, q):
         return "refused", "another company's non-public data", others
+    if others and re.search(FOLLOW_UP, q) and re.search(PRIVATE_WORDS, recent):
+        return "refused", "follow-up asks for another company's non-public data", others
     if not others and re.search(r"\b(their|they|them|that company)\b", q) and re.search(PRIVATE_WORDS, q):
         prev = mentioned_companies(recent, companies, own_id)
         if prev:
