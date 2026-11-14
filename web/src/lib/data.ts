@@ -83,7 +83,9 @@ export async function fetchFeed(companyId: string): Promise<FeedItem[]> {
 // ---------- Ask ----------
 // Contract: POST {VITE_ASK_URL}/ask  {question}  ->  {answer, route, sources[]}
 export async function ask(question: string, accessToken: string): Promise<AskResponse> {
-  if (USE_MOCK || !ASK_URL) return mockAsk(question);
+  if (USE_MOCK) return mockAsk(question);
+  // Real mode: never fall back to fake answers. A missing URL is shown as an error on the page.
+  if (!ASK_URL) throw new Error('The Ask service is not configured (VITE_ASK_URL is empty).');
   const res = await fetch(`${ASK_URL.replace(/\/$/, '')}/ask`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },

@@ -1,4 +1,4 @@
-﻿import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useAuth } from '../lib/auth';
 import { ask } from '../lib/data';
 import { ASK_URL, USE_MOCK } from '../lib/supabase';
@@ -8,7 +8,7 @@ const STAFF_URL = 'https://www.bluesciencepark.se/kontakt/kontaktpersoner/';
 
 interface Turn { question: string; res?: AskResponse; error?: string }
 
-function Answer({ res }: { res: AskResponse }) {
+function Answer({ res, simulated }: { res: AskResponse; simulated: boolean }) {
   const neutral = res.route === 'refused' || res.route === 'unrelated' || res.route === 'unclear';
   const box =
     res.route === 'in_scope' ? 'border-gray-200 bg-white'
@@ -17,7 +17,8 @@ function Answer({ res }: { res: AskResponse }) {
     : 'border-blue-200 bg-blue-50'; // unclear
   return (
     <div className={`rounded-lg border p-3 text-sm ${box}`}>
-      <p className="whitespace-pre-wrap">{res.answer}</p>
+      {simulated && <span className="mb-2 inline-block rounded bg-gray-800 px-2 py-0.5 text-xs font-medium text-white">SIMULATED - mock answer</span>}
+<p className="whitespace-pre-wrap">{res.answer}</p>
       {res.route === 'refer_to_staff' && (
         <a href={STAFF_URL} target="_blank" rel="noreferrer"
            className="mt-2 inline-block rounded-md bg-gray-900 px-3 py-1 text-xs font-medium text-white hover:bg-gray-700">
@@ -46,7 +47,8 @@ export default function Ask() {
   const [question, setQuestion] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
-  const mockAnswers = USE_MOCK || !ASK_URL;
+  const mockAnswers = USE_MOCK;
+  const askMissing = !USE_MOCK && !ASK_URL;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -73,15 +75,16 @@ export default function Ask() {
       </p>
       {mockAnswers && (
         <p className="mb-4 rounded-md bg-amber-50 p-2 text-xs text-amber-900">
-          Mock answers: VITE_ASK_URL is not set, so /ask is not called.
+          Mock mode: answers below are simulated and marked as such.
         </p>
       )}
 
-      <div className="mb-4 space-y-4">
+      {askMissing && <p className="mb-4 rounded-md bg-red-50 p-2 text-xs text-red-700">The Ask service is not connected (VITE_ASK_URL is empty). Questions will not be answered.</p>}
+<div className="mb-4 space-y-4">
         {turns.map((t, i) => (
           <div key={i} className="space-y-2">
             <p className="ml-auto max-w-[80%] rounded-lg bg-gray-900 px-3 py-2 text-sm text-white w-fit">{t.question}</p>
-            {t.res && <Answer res={t.res} />}
+            {t.res && <Answer res={t.res} simulated={mockAnswers} />}
             {t.error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-700">Could not get an answer: {t.error}</p>}
             {!t.res && !t.error && <p className="text-sm text-gray-500">Thinking…</p>}
           </div>
