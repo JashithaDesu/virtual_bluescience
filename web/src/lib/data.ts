@@ -1,8 +1,9 @@
-
+// The ONLY place that talks to Supabase. Pages call these functions, never supabase directly.
+// Every function has a mock branch so the UI works before the database is ready.
 import { supabase, USE_MOCK } from './supabase';
 import { mockClaims, mockCompanies, mockMatches, mockOpportunities, mockPrivate, mockUsers } from './mock';
 import { ASK_URL } from './supabase';
-import type { AskResponse, Company, CompanyPrivate, FeedItem, Membership, ProfileClaim } from './types';
+import type { AskResponse, ClaimField, Company, CompanyPrivate, FeedItem, Membership, ProfileClaim } from './types';
 
 export async function fetchMembership(userId: string): Promise<Membership | null> {
   if (USE_MOCK || !supabase) {
@@ -112,4 +113,58 @@ function mockAsk(q: string): Promise<AskResponse> {
     };
   }
   return new Promise((ok) => setTimeout(() => ok(r), 400));
+}
+
+// ---------- Profile editing (member) ----------
+// RLS: members may only write their own company's company_private row and origin='user' claims.
+type PrivateState = Pick<CompanyPrivate, 'priorities' | 'rejected_claim_ids'>;
+
+async function upsertPrivate(companyId: string, patch: Partial<PrivateState>): Promise<void> {
+  if (USE_MOCK || !supabase) {
+    let row = mockPrivate.find((p) => p.company_id === companyId);
+    if (!row) {
+      row = { company_id: companyId, priorities: [], rejected_claim_ids: [], notes: null, updated_at: new Date().toISOString() };
+      mockPrivate.push(row);
+    }
+    Object.assign(row, patch, { updated_at: new Date().toISOString() });
+    return;
+  }
+  const { error } = await supabase
+    .from('company_private')
+    .upsert({ company_id: companyId, ...patch }, { onConflict: 'company_id' });
+  if (error) throw new Error(`company_private: ${error.message}`);
+}
+
+/** Reject (or un-reject) one claim. Re-reads first so two tabs do not overwrite each other. */
+export async function setClaimRejected(companyId: string, claimId: string, rejected: boolean): Promise<string[]> {
+  const current = (await fetchPrivate(companyId))?.rejected_claim_ids ?? [];
+  const next = rejected
+    ? Array.from(new Set([...current, claimId]))
+    : current.filter((id) => id !== claimId);
+  await upsertPrivate(companyId, { rejected_claim_ids: next });
+  return next;
+}
+
+export async function savePriorities(companyId: string, priorities: string[]): Promise<void> {
+  const clean = Array.from(new Set(priorities.map((p) => p.trim()).filter(Boolean)));
+  await upsertPrivate(companyId, { priorities: clean });
+}
+
+/** Member adds a fact the agent missed. Stored as origin='user', verified=false (RLS requires both). */
+export async function addUserClaim(companyId: string, field: ClaimField, value: string): Promise<ProfileClaim> {
+  const row = {
+    company_id: companyId, field, value: value.trim(), type: 'stated' as const,
+    origin: 'user' as const, verified: false, confidence: 'high' as const,
+  };
+  if (USE_MOCK || !supabase) {
+    const c: ProfileClaim = {
+      ...row, id: crypto.randomUUID(), quote: null, source_url: null, retrieved_at: null,
+      is_simulated: false, created_at: new Date().toISOString(),
+    };
+    mockClaims.push(c);
+    return c;
+  }
+  const { data, error } = await supabase.from('profile_claims').insert(row).select(CLAIM_COLS).single();
+  if (error) throw new Error(`profile_claims: ${error.message}`);
+  return data as ProfileClaim;
 }
