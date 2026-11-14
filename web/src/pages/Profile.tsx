@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useAuth } from '../lib/auth';
 import { addUserClaim, fetchClaims, fetchPrivate, savePriorities, setClaimRejected } from '../lib/data';
+import { markRerankPending } from '../lib/rerank';
+import { Link } from 'react-router-dom';
 import type { ClaimField, ClaimType, ProfileClaim } from '../lib/types';
 
 const FIELD_LABELS: Record<ClaimField, string> = {
@@ -18,6 +20,7 @@ const TYPE_BADGE: Record<ClaimType, { label: string; cls: string }> = {
   missing: { label: 'Missing', cls: 'bg-gray-200 text-gray-700' },
 };
 
+const newsYear = (v: string | null): number | null => { const m = v?.match(/\(BSP news, [A-Za-z]{3,9}\.? (\d{4})\)/); return m ? Number(m[1]) : null; };
 const fmtDate = (d: string | null) => (d ? new Date(d).toLocaleDateString('en-GB') : null);
 
 interface RowProps {
@@ -62,6 +65,7 @@ function ClaimRow({ c, rejected, busy, onToggleReject, onAdd }: RowProps) {
         {c.type !== 'missing' && <span className="text-xs text-gray-500">confidence: {c.confidence}</span>}
         {c.verified && <span className="text-xs text-green-700">✓ verified</span>}
         {c.origin === 'user' && <span className="text-xs text-purple-700">added by you</span>}
+        {newsYear(c.value) !== null && newsYear(c.value)! <= 2023 && <span className="rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-700">old source ({newsYear(c.value)})</span>}
         {rejected && <span className="text-xs text-red-700">rejected</span>}
         {c.type !== 'missing' && c.origin === 'agent' && (
           <button onClick={() => onToggleReject(c)} disabled={busy}
@@ -154,6 +158,8 @@ export default function Profile() {
   const [priorities, setPriorities] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [savedNote, setSavedNote] = useState(false);
+  function afterSave() { if (!company) return; void markRerankPending(company.id); setSavedNote(true); }
 
   useEffect(() => {
     if (!company) return;
@@ -188,14 +194,14 @@ export default function Profile() {
   async function toggleReject(c: ProfileClaim) {
     if (!company) return;
     const next = await run(() => setClaimRejected(company.id, c.id, !rejectedIds.has(c.id)));
-    if (next) setRejectedIds(new Set(next));
+    if (next) { setRejectedIds(new Set(next)); afterSave(); }
   }
 
   async function addValue(c: ProfileClaim, value: string): Promise<boolean> {
     if (!company) return false;
     const created = await run(() => addUserClaim(company.id, c.field, value));
     if (!created) return false;
-    setClaims((cl) => [...cl, created]);
+    setClaims((cl) => [...cl, created]); afterSave();
     return true;
   }
 
@@ -204,7 +210,7 @@ export default function Profile() {
     const prev = priorities;
     setPriorities(next);
     const ok = await run(async () => { await savePriorities(company.id, next); return true; });
-    if (!ok) setPriorities(prev);
+    if (!ok) setPriorities(prev); else afterSave();
   }
 
   const grouped = useMemo(() => {
@@ -244,6 +250,7 @@ export default function Profile() {
       {!loading && !error && claims.length > 0 && (
         <>
           <Priorities items={priorities} busy={busy} onSave={updatePriorities} />
+          {savedNote && !saveError && <p className="mb-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">Saved. Your recommendations are being re-ranked: see the <Link to="/feed" className="font-medium underline">Opportunities</Link> tab.</p>}
           {saveError && (
             <p className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">Could not save: {saveError}</p>
           )}
