@@ -53,10 +53,47 @@ def upsert_opportunities(opps) -> int:
 
 
 def replace_matches(company_id: str, matches) -> int:
-    client().table("matches").delete().eq("company_id", company_id).execute()
+    """Publish a nonempty batch before removing stale rows.
+
+    Requires one publisher per company. The two requests are not a single
+    transaction, but readers never see a delete-first empty-list gap.
+    """
+    import math
+
     rows = _rows(matches)
-    if rows:
-        client().table("matches").insert(rows).execute()
+    if not rows:
+        raise ValueError("Empty match batch refused; existing matches preserved")
+    if any(r.get("company_id") != company_id for r in rows):
+        raise ValueError("Match batch contains a different company")
+    ids = [r.get("opportunity_id") for r in rows]
+    if any(not value for value in ids) or len(set(ids)) != len(ids):
+        raise ValueError("Missing or duplicate opportunity IDs")
+    ranks = [r.get("rank") for r in rows]
+    if any(type(rank) is not int for rank in ranks):
+        raise ValueError("Ranks must be integers")
+    if sorted(ranks) != list(range(1, len(rows) + 1)):
+        raise ValueError("Ranks must be consecutive")
+    for row in rows:
+        score = row.get("score")
+        if (
+            isinstance(score, bool)
+            or not isinstance(score, (int, float))
+            or not math.isfinite(score)
+        ):
+            raise ValueError("Match score must be finite")
+        if not isinstance(row.get("reason"), str) or not row["reason"].strip():
+            raise ValueError("Match reason is required")
+
+    sb = client()
+    sb.table("matches").upsert(
+        rows, on_conflict="company_id,opportunity_id"
+    ).execute()
+    (
+        sb.table("matches").delete()
+        .eq("company_id", company_id)
+        .not_.in_("opportunity_id", ids)
+        .execute()
+    )
     return len(rows)
 
 

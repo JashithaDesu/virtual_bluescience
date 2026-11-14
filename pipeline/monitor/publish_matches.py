@@ -32,17 +32,8 @@ def publish(company_id, rows):
             raise ValueError("Invalid score or reason")
 
     client = db.client()
-    client.table("matches").upsert(
-        rows, on_conflict="company_id,opportunity_id"
-    ).execute()
+    db.replace_matches(company_id, rows)
 
-    # Remove stale matches only after the new batch was successfully written.
-    (
-        client.table("matches").delete()
-        .eq("company_id", company_id)
-        .not_.in_("opportunity_id", ids)
-        .execute()
-    )
     saved = (
         client.table("matches")
         .select("company_id,opportunity_id,score,rank,reason")

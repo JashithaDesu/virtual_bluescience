@@ -1,0 +1,62 @@
+{
+  "checked_at": "2026-11-14T20:59:51.411749+00:00",
+  "company_id": "ocean-harvesting",
+  "runs": [
+    {
+      "run": 1,
+      "duration_seconds": 21.078,
+      "exit_code": 0
+    },
+    {
+      "run": 2,
+      "duration_seconds": 14.969,
+      "exit_code": 0
+    },
+    {
+      "run": 3,
+      "duration_seconds": 14.953,
+      "exit_code": 0
+    },
+    {
+      "run": 4,
+      "duration_seconds": 14.297,
+      "exit_code": 0
+    },
+    {
+      "run": 5,
+      "duration_seconds": 16.281,
+      "exit_code": 0
+    },
+    {
+      "run": 6,
+      "duration_seconds": 15.125,
+      "exit_code": 0
+    },
+    {
+      "run": 7,
+      "duration_seconds": 14.609,
+      "exit_code": 0
+    },
+    {
+      "run": 8,
+      "duration_seconds": 14.563,
+      "exit_code": 0
+    },
+    {
+      "run": 9,
+      "duration_seconds": 15.031,
+      "exit_code": 0
+    },
+    {
+      "run": 10,
+      "duration_seconds": 15.703,
+      "exit_code": 0
+    }
+  ],
+  "database_samples": 265,
+  "minimum_observed_rows": 10,
+  "empty_reads": 0,
+  "read_errors": [],
+  "browser_observation": "not recorded by this script",
+  "scope": "single writer; sampled reads, not transactional isolation"
+}
