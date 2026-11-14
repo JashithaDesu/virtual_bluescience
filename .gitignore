@@ -10,3 +10,7 @@ cache/
 .env*
 eval/fix_logins.py
 eval/check_logins.py
+node_modules/
+dist/
+.env.*
+!.env.example
